@@ -69,10 +69,12 @@ for data_point in data['metric_per_case']:
     metrics['case_name'] = case_name
     
     # Add the predicted and true lesion sizes and number of connected components to the metrics dictionary
-    metrics['predicted_lesion_size'] = predicted_lesion_data.get(case_name, {}).get('lesion_size', 0)
-    metrics['predicted_num_components'] = predicted_lesion_data.get(case_name, {}).get('num_components', 0)
     metrics['true_lesion_size'] = true_lesion_data.get(case_name, {}).get('lesion_size', 0)
     metrics['true_num_components'] = true_lesion_data.get(case_name, {}).get('num_components', 0)
+    metrics['predicted_lesion_size'] = predicted_lesion_data.get(case_name, {}).get('lesion_size', 0)
+    metrics['predicted_num_components'] = predicted_lesion_data.get(case_name, {}).get('num_components', 0)
+    metrics['lesion_size_error'] = (metrics['true_lesion_size'] - metrics['predicted_lesion_size'])
+    metrics['num_components_error'] = (metrics['true_num_components'] - metrics['true_num_components'])
     
     # Append the metrics dictionary to the list
     metrics_list.append(metrics)

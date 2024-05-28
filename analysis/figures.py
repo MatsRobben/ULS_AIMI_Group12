@@ -16,24 +16,31 @@ def plot_histograms_two_groups(df, columns_to_plot, save_dir, split_column='Dice
     num_rows = len(columns_to_plot)
 
     # Create subplots
-    fig, axes = plt.subplots(nrows=num_rows, ncols=num_columns, figsize=(12, num_rows * 4))
-    fig.tight_layout(pad=3.0)  # Adjust the spacing between subplots
+    fig, axes = plt.subplots(nrows=num_rows, ncols=num_columns, figsize=(12, num_rows * 3.5))
+    fig.tight_layout(pad=4.0)  # Adjust the spacing between subplots
+
+    # Define larger text sizes
+    title_size = 18
+    label_size = 16
+    tick_size = 14
 
     # Plot histograms for each column for each group
     for i, column in enumerate(columns_to_plot):
         # Plot for the low group
         ax_low = axes[i, 0]
         ax_low.hist(df_low[column], bins=50, color='red', edgecolor='black', alpha=0.5)
-        ax_low.set_title(f'{column} (<= {threshold})')
-        ax_low.set_xlabel('Value')
-        ax_low.set_ylabel('Frequency')
+        ax_low.set_title(f'{column} (<= {threshold})', fontsize=title_size)
+        ax_low.set_xlabel('Value', fontsize=label_size)
+        ax_low.set_ylabel('Frequency', fontsize=label_size)
+        ax_low.tick_params(axis='both', which='major', labelsize=tick_size)
 
         # Plot for the high group
         ax_high = axes[i, 1]
         ax_high.hist(df_high[column], bins=50, color='blue', edgecolor='black', alpha=0.5)
-        ax_high.set_title(f'{column} (> {threshold})')
-        ax_high.set_xlabel('Value')
-        ax_high.set_ylabel('Frequency')
+        ax_high.set_title(f'{column} (> {threshold})', fontsize=title_size)
+        ax_high.set_xlabel('Value', fontsize=label_size)
+        ax_high.set_ylabel('Frequency', fontsize=label_size)
+        ax_high.tick_params(axis='both', which='major', labelsize=tick_size)
 
     # Save the subplot as an image file
     file_path = os.path.join(save_dir, 'grouped_column_histogram.png')
@@ -41,7 +48,6 @@ def plot_histograms_two_groups(df, columns_to_plot, save_dir, split_column='Dice
     
     # Close the plot to free memory
     plt.close(fig)
-
 
 def plot_histograms(df, columns_to_plot, save_dir):
     # Create the directory if it doesn't exist
@@ -113,7 +119,7 @@ def plot_scatterplots(df, scatterplot_tuples, save_dir, split_column='Dice', thr
 
     # Save the subplot as an image file
     scatterplots_filename = '_'.join([f'{column_x}_vs_{column_y}' for (column_x, column_y) in scatterplot_tuples])
-    file_path = os.path.join(save_dir, f'{scatterplots_filename}.png')
+    file_path = os.path.join(save_dir, f'zero{scatterplots_filename}.png')
     fig.savefig(file_path)
 
     # Close the plot to free memory

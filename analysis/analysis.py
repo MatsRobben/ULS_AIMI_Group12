@@ -23,14 +23,27 @@ df = pd.read_parquet(parquet_file_path)
 print(df.columns)
 print(df)
 
+# df = df[df['Dice'] == 0]
+# print(df)
+
 columns_to_plot = [col for col in df.columns if col != 'case_name']
 
 # Define the directory to save the images
 save_directory = 'images'
 
+plot_histograms(df, columns_to_plot, save_directory)
+plot_scatterplots(df, [('Dice', 'lesion_size_error')], save_directory)
+plot_scatterplots(df, [('Dice', 'lesion_size_error')], save_directory)
+plot_scatterplots(df, [('Dice', 'true_lesion_size'), ('Dice', 'predicted_lesion_size')], save_directory)
+plot_histograms_two_groups(df, ['true_lesion_size', 'predicted_lesion_size', 'predicted_num_components'], save_directory)
 plot_scatterplots(df, [('predicted_lesion_size', 'true_lesion_size')], save_directory)
-# plot_histograms(df, columns_to_plot, save_directory)
+plot_scatterplots(df, [('true_lesion_size', 'predicted_num_components'), ('predicted_lesion_size', 'predicted_num_components')], save_directory)
 
-# plot_histograms_two_groups(df, ['true_lesion_size', 'true_num_components',
-#                                 'predicted_lesion_size', 'predicted_num_components',
-#                                 'lesion_size_error', 'num_components_error'], save_directory)
+# Define the directory to save the images
+save_directory = 'images/zero_group'
+
+df = df[df['Dice'] == 0]
+
+plot_histograms(df, columns_to_plot, save_directory)
+plot_scatterplots(df, [('predicted_lesion_size', 'true_lesion_size')], save_directory)
+plot_scatterplots(df, [('true_lesion_size', 'predicted_num_components'), ('predicted_lesion_size', 'predicted_num_components')], save_directory)

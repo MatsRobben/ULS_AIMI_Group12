@@ -39,7 +39,7 @@ cp -r $HOME/ULS23/baseline_model/architecture/extensions/nnunetv2/ .
 
 # Copy model
 cp $HOME/Dataset001_ULS.zip $nnUNet_results
-unzip $nnUNet_results/Dataset001_ULS.zip
+unzip $nnUNet_results/Dataset001_ULS.zip -d $nnUNet_results
 rm $nnUNet_results/Dataset001_ULS.zip
 cp $nnUNet_results/Dataset001_ULS/nnUNetTrainer_ULS_500_QuarterLR__nnUNetPlansNoRs__3d_fullres_resenc/fold_all/checkpoint_best.pth \
 $nnUNet_results/Dataset001_ULS/nnUNetTrainer_ULS_500_QuarterLR__nnUNetPlansNoRs__3d_fullres_resenc/fold_all/checkpoint_final.pth

@@ -62,4 +62,9 @@ export pretrained="$nnUNet_results/Dataset001_ULS/nnUNetTrainer_ULS_500_QuarterL
 nnUNetv2_train 1 3d_fullres_resenc all -p nnUNetPlansNoRs -tr nnUNetTrainer_ULS_500_QuarterLR -pretrained_weights $pretrained --val --val_best --npz
 
 # copy results
-cp -r $nnUNet_results/Dataset001_ULS/nnUNetTrainer_ULS_500_QuarterLR__nnUNetPlansNoRs__3d_fullres_resenc/fold_all/validation $HOME/results
+# Define the source directory and the output zip file name
+SOURCE_DIR="$nnUNet_results/Dataset001_ULS/nnUNetTrainer_ULS_500_QuarterLR__nnUNetPlansNoRs__3d_fullres_resenc/fold_all/validation/"
+ZIP_FILE="$HOME/validation_baseline.zip"
+
+# Create the zip file containing only .json and .nii.gz files
+zip -j $ZIP_FILE ${SOURCE_DIR}*.json ${SOURCE_DIR}*.nii.gz

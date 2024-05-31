@@ -55,7 +55,7 @@ def plot_histograms(df, columns_to_plot, save_dir):
         os.makedirs(save_dir)
 
     # Create subplots for histograms
-    fig_hist, axes_hist = plt.subplots(nrows=len(columns_to_plot) // 2, ncols=2, figsize=(12, 12))
+    fig_hist, axes_hist = plt.subplots(nrows=-(-len(columns_to_plot) // 2), ncols=2, figsize=(12, 12))
     fig_hist.tight_layout(pad=3.0)  # Adjust the spacing between subplots
 
     # Flatten the axes array for easy iteration
@@ -119,7 +119,7 @@ def plot_scatterplots(df, scatterplot_tuples, save_dir, split_column='Dice', thr
 
     # Save the subplot as an image file
     scatterplots_filename = '_'.join([f'{column_x}_vs_{column_y}' for (column_x, column_y) in scatterplot_tuples])
-    file_path = os.path.join(save_dir, f'zero{scatterplots_filename}.png')
+    file_path = os.path.join(save_dir, f'{scatterplots_filename}.png')
     fig.savefig(file_path)
 
     # Close the plot to free memory

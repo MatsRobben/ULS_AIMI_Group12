@@ -7,8 +7,8 @@ from skimage.measure import label
 import pandas as pd
 
 # Define the paths to the source directories
-true_labels_source_dir = 'data/Dataset001_ULS/labelsTr/'
-predicted_labels_source_dir = 'validation_baseline/'
+true_labels_source_dir = 'data_full/Dataset001_ULS/labelsTr/'
+predicted_labels_source_dir = 'validation/validation_baseline_full'
 
 # Get a list of all files in the predicted and true labels folders
 predicted_labels = os.listdir(predicted_labels_source_dir)
@@ -52,7 +52,7 @@ predicted_lesion_data = compute_lesion_stats(predicted_labels_source_dir, predic
 true_lesion_data = compute_lesion_stats(true_labels_source_dir, true_nii_files)
 
 # Define the path to the JSON file
-json_file_path = 'validation_baseline/summary.json'
+json_file_path = 'validation/validation_baseline_full/summary.json'
 
 # Load the JSON file
 with open(json_file_path, 'r') as file:
@@ -96,5 +96,5 @@ df = pd.DataFrame(metrics_list)
 # Display the DataFrame
 print(df)
 
-parquet_file_path = 'lesion_metrics_baseline.parquet'
+parquet_file_path = 'lesion_metrics_baseline_full.parquet'
 df.to_parquet(parquet_file_path, index=False)

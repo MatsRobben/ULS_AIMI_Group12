@@ -2,13 +2,13 @@ import pandas as pd
 import json
 
 # Define the path to the Parquet file
-parquet_file_path = 'lesion_metrics_baseline.parquet'
+parquet_file_path = 'lesion_metrics_baseline_full.parquet'
 
 # Load the Parquet file into a pandas DataFrame
 df = pd.read_parquet(parquet_file_path)
 
 # Define the number of lowest scoring entries to select
-N = 100  # Change this number to the desired number of lowest scoring case_names
+N = len(df[df['Dice'] < 0.6])  # Change this number to the desired number of lowest scoring case_names
 
 # Select the N lowest scoring case_names based on the 'Dice' column
 lowest_scoring_cases = df.nsmallest(N, 'Dice')['case_name'].tolist()

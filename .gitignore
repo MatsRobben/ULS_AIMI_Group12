@@ -1,9 +1,8 @@
 # Ignore directories
 analysis/data/
+analysis/data_full/
 analysis/validation/
-analysis/validation_baseline/
 analysis/worst_cases/
-
 
 # Ignore __pycache__ directories within the analysis folder
 analysis/__pycache__/

@@ -5,8 +5,8 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --gpus=1
-#SBATCH --mem=16G
-#SBATCH --time=02:00:00
+#SBATCH --mem=8G
+#SBATCH --time=04:00:00
 #SBATCH --gpus-per-node=1
 
 # Go to temp folder
@@ -50,7 +50,7 @@ cp $nnUNet_results/Dataset001_ULS/nnUNetTrainer_ULS_500_QuarterLR__nnUNetPlansNo
 $nnUNet_preprocessed/Dataset001_ULS/nnUNetPlansNoRs.json
 
 # Copy data
-cp -r $HOME/data/Dataset001_ULS/ $nnUNet_raw/Dataset001_ULS
+cp -r $HOME/data_full/Dataset001_ULS/ $nnUNet_raw/Dataset001_ULS
 
 # Process the data and make a plans
 nnUNetv2_extract_fingerprint -d 1
@@ -64,7 +64,7 @@ nnUNetv2_train 1 3d_fullres_resenc all -p nnUNetPlansNoRs -tr nnUNetTrainer_ULS_
 # copy results
 # Define the source directory and the output zip file name
 SOURCE_DIR="$nnUNet_results/Dataset001_ULS/nnUNetTrainer_ULS_500_QuarterLR__nnUNetPlansNoRs__3d_fullres_resenc/fold_all/validation/"
-ZIP_FILE="$HOME/validation_baseline.zip"
+ZIP_FILE="$HOME/validation_baseline_full.zip"
 
 # Create the zip file containing only .json and .nii.gz files
 zip -j $ZIP_FILE ${SOURCE_DIR}*.json ${SOURCE_DIR}*.nii.gz

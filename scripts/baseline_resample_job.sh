@@ -25,6 +25,8 @@ pip3 install -e .
 
 mkdir data data/nnUNet_raw data/nnUNet_results data/nnUNet_preprocessed
 
+export trainer="nnUNetTrainer_ULS_500_QuarterLR"
+
 # Create env variables
 export nnUNet_raw="$TMPDIR/nnUNet/data/nnUNet_raw"
 export nnUNet_results="$TMPDIR/nnUNet/data/nnUNet_results"
@@ -38,11 +40,11 @@ sed -i '465s/.*/            print(*args, flush=True)/' nnunetv2/training/nnUNetT
 cp -r $HOME/ULS23/baseline_model/architecture/extensions/nnunetv2/ .
 
 # Copy model
-cp $HOME/Dataset001_ULS.zip $nnUNet_results
+cp $HOME/zip_folder/Dataset001_ULS.zip $nnUNet_results
 unzip $nnUNet_results/Dataset001_ULS.zip -d $nnUNet_results
 rm $nnUNet_results/Dataset001_ULS.zip
-cp $nnUNet_results/Dataset001_ULS/nnUNetTrainer_ULS_500_QuarterLR__nnUNetPlansNoRs__3d_fullres_resenc/fold_all/checkpoint_best.pth \
-$nnUNet_results/Dataset001_ULS/nnUNetTrainer_ULS_500_QuarterLR__nnUNetPlansNoRs__3d_fullres_resenc/fold_all/checkpoint_final.pth
+#cp $nnUNet_results/Dataset001_ULS/nnUNetTrainer_ULS_500_QuarterLR__nnUNetPlansNoRs__3d_fullres_resenc/fold_all/checkpoint_best.pth \
+#$nnUNet_results/Dataset001_ULS/nnUNetTrainer_ULS_500_QuarterLR__nnUNetPlansNoRs__3d_fullres_resenc/fold_all/checkpoint_final.pth
 
 # Copy plans file
 mkdir $nnUNet_preprocessed/Dataset001_ULS
@@ -50,10 +52,10 @@ cp $nnUNet_results/Dataset001_ULS/nnUNetTrainer_ULS_500_QuarterLR__nnUNetPlansNo
 $nnUNet_preprocessed/Dataset001_ULS/nnUNetPlansNoRs.json
 
 # Copy data
-cp -r $HOME/data/Dataset001_ULS/ $nnUNet_raw/Dataset001_ULS
+cp -r $HOME/data_full/Dataset001_ULS/ $nnUNet_raw/Dataset001_ULS
 
 #############################################################
-Resample worst performing files
+# Resample worst performing files
 #############################################################
 # Define the directories
 images_dir="$nnUNet_raw/Dataset001_ULS/imagesTr"
@@ -69,7 +71,7 @@ lesion_names=$(jq -r '.[]' "$json_file")
 num_resamples=1  # Change this to the desired number of resamples
 
 # Initialize a counter for resampling
-counter=1
+counter=0
 
 # Loop through each lesion name
 for lesion_name in $lesion_names; do
@@ -102,12 +104,11 @@ done
 
 # Change dataset.json file
 dataset_file="$nnUNet_raw/Dataset001_ULS/dataset.json"
-total_resamples=$(((${#lesion_names[@]}) * num_resamples))
 current_num_training=$(grep -oP '"numTraining":\s*\K\d+' "$dataset_file")
-new_num_training=$((current_num_training + total_resamples))
+new_num_training=$((current_num_training + counter))
 sed -i.bak -E "s/(\"numTraining\":\s*)[0-9]+/\1$new_num_training/" "$dataset_file"
 #############################################################
-End resmpale
+# End resmpale
 #############################################################
 
 # Process the data and make a plans
@@ -117,11 +118,11 @@ nnUNetv2_preprocess -d 1 -p nnUNetPlansNoRs
 
 # Train model
 export pretrained="$nnUNet_results/Dataset001_ULS/nnUNetTrainer_ULS_500_QuarterLR__nnUNetPlansNoRs__3d_fullres_resenc/fold_all/checkpoint_best.pth"
-nnUNetv2_train 1 3d_fullres_resenc all -p nnUNetPlansNoRs -tr nnUNetTrainer_ULS_500_QuarterLR -pretrained_weights $pretrained --npz
+nnUNetv2_train 1 3d_fullres_resenc all -p nnUNetPlansNoRs -tr nnUNetTrainer_ULS_200_EighthLR -pretrained_weights $pretrained --npz
 
 # copy results
 # Define the source directory and the output zip file name
-SOURCE_DIR="$nnUNet_results/Dataset001_ULS/nnUNetTrainer_ULS_500_QuarterLR__nnUNetPlansNoRs__3d_fullres_resenc/fold_all/validation/"
+SOURCE_DIR="$nnUNet_results/Dataset001_ULS/nnUNetTrainer_ULS_200_EighthLR__nnUNetPlansNoRs__3d_fullres_resenc/fold_all/validation/"
 ZIP_FILE="$HOME/validation_baseline_resample.zip"
 
 # Create the zip file containing only .json and .nii.gz files
@@ -129,4 +130,4 @@ zip -j $ZIP_FILE ${SOURCE_DIR}*.json ${SOURCE_DIR}*.nii.gz
 
 rm -r $SOURCE_DIR
 mkdir $HOME/results
-cp -r $nnUNet_results/ $HOME/results
+cp -r $nnUNet_results/Dataset001_ULS/nnUNetTrainer_ULS_200_EighthLR__nnUNetPlansNoRs__3d_fullres_resenc/ $HOME/results

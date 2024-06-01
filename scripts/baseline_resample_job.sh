@@ -25,8 +25,6 @@ pip3 install -e .
 
 mkdir data data/nnUNet_raw data/nnUNet_results data/nnUNet_preprocessed
 
-export trainer="nnUNetTrainer_ULS_500_QuarterLR"
-
 # Create env variables
 export nnUNet_raw="$TMPDIR/nnUNet/data/nnUNet_raw"
 export nnUNet_results="$TMPDIR/nnUNet/data/nnUNet_results"
@@ -37,7 +35,7 @@ sed -i '463s/.*/                print(*args, flush=True)/' nnunetv2/training/nnU
 sed -i '465s/.*/            print(*args, flush=True)/' nnunetv2/training/nnUNetTrainer/nnUNetTrainer.py
 
 # copy extentions
-cp -r $HOME/ULS23/baseline_model/architecture/extensions/nnunetv2/ .
+cp -r $HOME/ULS_AIMI_Group12/extensions/nnunetv2/ .
 
 # Copy model
 cp $HOME/zip_folder/Dataset001_ULS.zip $nnUNet_results

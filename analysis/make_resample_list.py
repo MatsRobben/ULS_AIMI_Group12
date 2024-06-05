@@ -2,7 +2,7 @@ import pandas as pd
 import json
 
 # Define the path to the Parquet file
-parquet_file_path = 'lesion_metrics_baseline_full.parquet'
+parquet_file_path = 'tables/lesion_metrics_baseline_full.parquet'
 
 # Load the Parquet file into a pandas DataFrame
 df = pd.read_parquet(parquet_file_path)

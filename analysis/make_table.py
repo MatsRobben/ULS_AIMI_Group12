@@ -6,17 +6,19 @@ import SimpleITK as sitk
 from skimage.measure import label
 import pandas as pd
 
+name = 'baseline_resample_2'
+
 # Define the paths to the source directories
 true_labels_source_dir = 'data_full/Dataset001_ULS/labelsTr/'
-predicted_labels_source_dir = 'validation/validation_baseline_full'
+predicted_labels_source_dir = f'validation/validation_{name}'
 
 # Get a list of all files in the predicted and true labels folders
 predicted_labels = os.listdir(predicted_labels_source_dir)
 true_labels = os.listdir(true_labels_source_dir)
 
 # Filter the list to include only files ending with .nii.gz
-predicted_nii_files = [f for f in predicted_labels if f.endswith('.nii.gz')]
-true_nii_files = [f for f in true_labels if f.endswith('.nii.gz')]
+predicted_nii_files = [f for f in predicted_labels if f.endswith('.nii.gz') and 'resample' not in f]
+true_nii_files = [f for f in true_labels if f.endswith('.nii.gz') and 'resample' not in f]
 
 # Function to compute lesion sizes and number of connected components
 def compute_lesion_stats(source_dir, nii_files):
@@ -52,7 +54,7 @@ predicted_lesion_data = compute_lesion_stats(predicted_labels_source_dir, predic
 true_lesion_data = compute_lesion_stats(true_labels_source_dir, true_nii_files)
 
 # Define the path to the JSON file
-json_file_path = 'validation/validation_baseline_full/summary.json'
+json_file_path = f'validation/validation_{name}/summary.json'
 
 # Load the JSON file
 with open(json_file_path, 'r') as file:
@@ -69,7 +71,9 @@ for data_point in data['metric_per_case']:
     
     # Extract the case name from the prediction file path
     case_name = os.path.basename(prediction_file).replace('.nii.gz', '')
-    
+    if 'resample' in case_name:
+        continue
+
     # Extract the metrics
     metrics = data_point['metrics']['1']
     
@@ -96,5 +100,5 @@ df = pd.DataFrame(metrics_list)
 # Display the DataFrame
 print(df)
 
-parquet_file_path = 'lesion_metrics_baseline_full.parquet'
+parquet_file_path = f'tables/lesion_metrics_{name}.parquet'
 df.to_parquet(parquet_file_path, index=False)
